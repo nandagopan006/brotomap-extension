@@ -1,0 +1,20 @@
+node_modules/
+dist/
+build/
+.cache/
+
+.env
+.env.local
+*.local
+
+.DS_Store
+Thumbs.db
+
+*.log
+npm-debug.log*
+
+.vscode/*
+!.vscode/extensions.json
+
+# saved portal fixtures may contain personal data - opt in explicitly
+extension/test/fixtures/*.private.html

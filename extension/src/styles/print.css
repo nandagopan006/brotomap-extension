@@ -1,0 +1,100 @@
+/*
+ * PRINT — a study document, not a screenshot of a web page.
+ *
+ * The specification is explicit: white paper, black text, no colour, no
+ * emoji, no decorative blocks. Structure comes from typography, spacing and
+ * hairline rules, because those survive a grayscale laser printer and a
+ * photocopy, and a coloured panel does not.
+ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+
+  /* Nothing coloured, nothing shaded, nothing that costs toner to say nothing. */
+  *,
+  *::before,
+  *::after {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    font: 10.5pt/1.45 Georgia, "Times New Roman", serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: Helvetica, Arial, sans-serif;
+    /* A heading alone at the foot of a page is a heading in the wrong place. */
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  h1 {
+    font-size: 16pt;
+    margin: 0 0 2mm;
+  }
+
+  h2 {
+    font-size: 12pt;
+    margin: 6mm 0 2mm;
+    padding-bottom: 1mm;
+    border-bottom: 0.5pt solid #000;
+  }
+
+  .header {
+    border-bottom: 1pt solid #000;
+    padding: 0 0 3mm;
+    margin-bottom: 4mm;
+  }
+
+  .panel {
+    padding: 0;
+    max-width: none;
+  }
+
+  /* A topic split across two pages is read twice and understood once. */
+  li,
+  section,
+  .status {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .status {
+    border: 0.5pt solid #000;
+    padding: 2mm 3mm;
+    margin: 2mm 0;
+  }
+
+  ol,
+  ul {
+    padding-left: 6mm;
+  }
+
+  li {
+    margin-bottom: 1mm;
+  }
+
+  .muted {
+    /* Still black, but clearly secondary. */
+    font-style: italic;
+  }
+
+  /* Controls are not part of a document. */
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* A link that only works on a screen is worth nothing on paper. */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8.5pt;
+  }
+}

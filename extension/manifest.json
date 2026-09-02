@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Brotomap",
+  "version": "0.1.0",
+  "description": "Turns the current Brototype technical task into a complete 5-day learning roadmap.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Brotomap"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@brotomap/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Brotomap Chrome extension (Manifest V3) - built in Phase 2",
+  "scripts": {
+    "build": "vite build && vite build --config vite.content.config.ts",
+    "build:watch": "vite build --watch",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@brotomap/shared": "*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.2.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.2.2"
+  }
+}

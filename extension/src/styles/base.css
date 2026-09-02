@@ -1,0 +1,126 @@
+/*
+ * Structural styling only. Visual design lands in Phase 11.
+ * Neutral, high contrast, no decoration - the same restraint the PDF requires.
+ */
+
+:root {
+  --ink: #16181d;
+  --ink-soft: #5b6270;
+  --line: #d9dde3;
+  --surface: #ffffff;
+  --surface-alt: #f5f6f8;
+  --accent: #1f2937;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* The side panel is roughly 400px wide, so nothing may assume more. */
+  overflow-wrap: anywhere;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0 0 8px;
+}
+
+button {
+  font: inherit;
+  padding: 8px 12px;
+  width: 100%;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+button.linkish {
+  width: auto;
+  padding: 2px 6px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--accent);
+}
+
+.panel {
+  padding: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.status {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-alt);
+  overflow-wrap: anywhere;
+}
+
+.status.error {
+  border-color: #c9ced6;
+}
+
+ol,
+ul {
+  padding-left: 18px;
+  margin: 0 0 8px;
+}
+
+.stack {
+  display: grid;
+  gap: 8px;
+}

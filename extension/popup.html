@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Brotomap</title>
+    <style>
+      /*
+       * Chrome caps a popup at 800x600. Taking most of that and scrolling the
+       * body is what lets a fifty-topic roadmap live here rather than in a tab.
+       */
+      html, body { width: 420px; }
+      body { max-height: 580px; overflow-y: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/popup/main.tsx"></script>
+  </body>
+</html>

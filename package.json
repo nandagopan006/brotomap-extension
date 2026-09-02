@@ -1,0 +1,35 @@
+{
+  "name": "brotomap",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that turns the current Brototype technical task into a complete 5-day learning roadmap",
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "extension",
+    "server"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run build --workspaces --if-present && vitest run",
+    "test:watch": "vitest",
+    "build": "npm run build --workspaces --if-present",
+    "server": "npm run start -w @brotomap/server",
+    "models": "npm run models -w @brotomap/server",
+    "try": "npm run try -w @brotomap/server",
+    "map": "npm run try:map -w @brotomap/server",
+    "limits": "npm run limits -w @brotomap/server",
+    "notion": "npm run notion -w @brotomap/server",
+    "autostart": "npm run autostart -w @brotomap/server",
+    "autostart:remove": "npm run autostart:remove -w @brotomap/server"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "happy-dom": "^20.12.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
