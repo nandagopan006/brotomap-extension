@@ -1,99 +1,129 @@
 # Brotomap
 
-A Chrome extension for Brototype students. It reads the **current module's
-technical task**, works out everything a student actually needs to learn to
-complete it, and produces a validated 5-day learning and execution roadmap —
-in one click, with a clean black-and-white PDF export.
+A Chrome extension for Brototype students.
 
-**Status: Phase 2 complete** (contracts + a loadable Chrome extension shell).
-Detection lands in Phase 3 — see [docs/05-build-plan.md](docs/05-build-plan.md).
+Open your module's technical task on the portal, click one button, and get a
+prioritised list of everything you actually need to learn for it — including the
+prerequisites the task never mentions — laid out as a 5-day study roadmap you can
+send straight to Notion.
 
-## The one rule
+---
 
-> **AI for knowledge. Code for planning.**
->
-> Discovering what a student must learn is reasoning — the model does that.
-> Ordering topics and packing hours into five days is arithmetic — TypeScript
-> does that, deterministically, so prerequisite order is a guarantee and the same
-> task always produces the same plan.
+## What it does
 
-## The four layers
+1. Reads the **technical task** on your Brototype portal page (only the technical
+   one — Personal Development and Communication tasks are ignored)
+2. Opens every topic and reads the full content, not just the titles
+3. Works out what you really need to know, including the gaps the task assumes
+   you already have
+4. Sorts it by priority — **P0** you cannot skip, down to **P3** optional depth
+5. Builds a 5-day roadmap: Learn → Understand → Practice → Build → Revise
+6. Sends it to Notion as a page with checkboxes
 
-```
-Extraction     what is on the page right now      content script   no AI
-Understanding  what the task means, what to learn server           AI
-Planning       how it fits into five days         server           code only
-Presentation   how it is shown and exported       roadmap tab      no AI
-```
+It only reads. It never clicks submit, never deletes anything, and never touches
+your portal data.
 
-## Layout
+---
 
-```
-brotomap-extension/
-├── docs/         specification
-├── shared/       types + zod schemas — the single source of truth
-├── extension/    Manifest V3 · React · TypeScript      (from Phase 2)
-└── server/       Express · AI provider · holds the key (from Phase 5)
-```
+## Setup (once)
 
-## Using it without a terminal open
-
-The extension needs the local server, because the AI key must not ship inside a
-browser extension. Keeping a terminal open forever is not a way to use software,
-so:
+### 1. Install
 
 ```bash
-npm run autostart          # start with Windows, hidden - no window
-npm run autostart:remove   # undo it
+npm install
+npm run build
 ```
 
-That writes one launcher into the Startup folder. Nothing is installed, no
-service is registered, and removing it deletes the file.
+### 2. Add your keys
+
+Copy `server/.env.example` to `server/.env` and fill in:
+
+| Key | Where to get it |
+|---|---|
+| `AI_API_KEY` | [console.groq.com](https://console.groq.com) → API Keys → Create |
+| `NOTION_TOKEN` | [notion.so/my-integrations](https://notion.so/my-integrations) → New integration → copy the secret |
+| `NOTION_PARENT_PAGE_ID` | The 32 characters in your Notion page's URL |
+
+Notion is optional — leave both blank and the export is simply not offered.
+
+**Important for Notion:** open the page you want roadmaps saved to, click `...` →
+**Connections** → **Connect to** → your integration. Without this Notion replies
+"Could not find page", because an integration can only see pages it's been given.
+
+### 3. Load the extension in Chrome
+
+1. Go to `chrome://extensions`
+2. Turn on **Developer mode** (top right)
+3. Click **Load unpacked** → select the `extension/dist` folder
+4. Pin Brotomap to your toolbar
+
+### 4. Make the server start on its own
+
+```bash
+npm run autostart
+```
+
+The extension needs a small local server, because your API key must never live
+inside a browser extension. This makes it start with Windows, hidden — no
+terminal, no window, nothing to remember.
+
+To undo it: `npm run autostart:remove`
+
+---
+
+## Using it
+
+1. Open your module page on **student.brototype.com**
+2. Click the **Brotomap** icon
+3. Click **Generate Roadmap**
+4. Wait — it reads the task, then thinks. This takes a few minutes.
+5. Read the topics and the 5 days in the popup
+6. Click **Save to Notion**
+
+That's it.
+
+If a non-technical task is the one that's open, it tells you so rather than
+quietly building a roadmap for the wrong thing.
+
+---
+
+## After changing code
+
+```bash
+npm run build
+```
+
+Then press the **reload** icon on the Brotomap card in `chrome://extensions`.
+
+---
+
+## If something goes wrong
+
+**"Cannot connect to server"**
+The server isn't running. Start it with `npm run server`, or set up autostart
+above. To check it's alive, open <http://localhost:8787/api/health> — you should
+see `{"ok":true,...}`.
+
+**"Could not find page" from Notion**
+You skipped the Connections step. See Setup → 2.
+
+**Model errors about tokens or a decommissioned model**
+Free-tier limits change and model names get retired. Run `npm run models` to see
+what your key can use, and `npm run limits` to see your token budget.
+
+**It found fewer topics than the page shows**
+The portal was still loading. Close the popup and try again.
+
+---
 
 ## Commands
 
 ```bash
-npm install          # once, from the repo root (npm workspaces)
-npm run build        # builds extension/dist
-npm run typecheck    # all three workspaces, strict
-npm test             # builds, then runs every test
+npm run build      # build the extension
+npm run server     # start the server in this terminal
+npm run autostart  # start the server with Windows instead
+npm run models     # list models your key can use
+npm run limits     # show your token limits
+npm run notion     # check your Notion setup
+npm test           # run the tests
 ```
-
-## Loading the extension in Chrome
-
-1. `npm run build`
-2. Open `chrome://extensions`
-3. Turn on **Developer mode** (top right)
-4. **Load unpacked** → select `extension/dist`
-5. Pin Brotomap and click it on any normal web page
-
-The popup reads the page through a content script that is injected only when you
-act — Brotomap holds `activeTab`, not permission to read any site in the
-background. Detection itself arrives in Phase 3, so today the popup honestly
-reports that it is not implemented, and names the page it ran on to prove the
-round-trip works.
-
-After changing code: `npm run build`, then press the reload icon on the
-Brotomap card in `chrome://extensions`.
-
-## Docs
-
-| Doc | Contents |
-|---|---|
-| [01 — Product Spec](docs/01-product-spec.md) | What we are building and what "good" means |
-| [02 — Architecture](docs/02-architecture.md) | Layers, detection, extraction safety, security, errors |
-| [03 — AI Pipeline](docs/03-ai-pipeline.md) | The stages, and where AI is *not* used |
-| [04 — Data Schemas](docs/04-data-schemas.md) | Pointer into `shared/src`, plus the rules encoded there |
-| [05 — Build Plan](docs/05-build-plan.md) | Phases 0–13 with acceptance criteria |
-| [06 — Open Questions](docs/06-open-questions.md) | What is needed before Phases 3 and 5 |
-
-## Non-negotiables
-
-- No hard-coded technology names, task titles, or module numbers — those are
-  runtime data that change every week. Enforced by a test.
-- Only the **technical** task. Other task categories are ignored, never merged.
-- Never guess between tasks: an unclear detection stops and says so.
-- The AI provider key lives only in `server/.env`, never in the extension.
-- The extension reads; it never submits, deletes, or clicks anything destructive.
-- No accounts, no database, no tracking.
-# brotomap-extension
